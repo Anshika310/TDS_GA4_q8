@@ -2,7 +2,7 @@ name: Daily Commit
 
 on:
   schedule:
-    - cron: '17 5 * * *'  # runs daily at 05:17 UTC
+    - cron: '45 15 * * *'  # runs daily at 05:17 UTC
   workflow_dispatch:
 
 jobs:
@@ -17,9 +17,11 @@ jobs:
           echo "Committed at: $(date -u)" >> timestamp.txt
 
       - name: Commit and push
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT_tkn }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add timestamp.txt
           git commit -m "Daily update"
-          git push
+          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git
