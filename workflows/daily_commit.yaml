@@ -1,0 +1,25 @@
+name: Daily Commit
+
+on:
+  schedule:
+    - cron: '30 15 * * *'  # runs daily at 05:17 UTC
+  workflow_dispatch:
+
+jobs:
+  commit-time-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Append datetime [23f2004584@ds.study.iitm.ac.in]
+        run: |
+          echo "Committed at: $(date -u)" >> timestamp.txt
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add timestamp.txt
+          git commit -m "Daily update"
+          git push
